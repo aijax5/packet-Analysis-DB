@@ -1,0 +1,33 @@
+feature (2) : Sessions                  paper : Detection of Unauthorized IoT using ML
+            A Session in TCP is cconversation from conne ction establishment to closing of connection.
+    From the perspective of Research paper Detection of Unauthorized IoT using ML, We use sessions information to reconstruct
+    traffic data to extract attributes of dataset for classifier
+context: proposed method
+
+
+feature (3): Port number                paper: Detection of threats to IoT Devices using VPN based Honeypots.
+            Port number is essential of differentiate process running at same host as IP address alone is not sufficient to uniquely address.
+    From the perspective of Research Paper on Detection of threats to IoT Devices using VPN based Honeypots. 
+    This feature can help us detect connections outbound from our Honeypot VLAN. (IP,port is recorded instead of just ports for better understanding)
+context: conclusions, IP and ports are used for evaluation/analysis 
+
+
+feature (4) : MAC/ Physical address      paper: Detection of Unauthorized IoT using ML  
+            MAC address is the Hardware address of the device it is assigned by the manufacturers of the Network Interface Cards.
+    Helpful to identify the maker of the device but this method is not always reliable as it difficult but possible forge MAC Address.
+    This provides with basis for neccessing of building a ML model to white list devices connecting to the network.
+    (IP,MAC is recorded instead of just ports for better understanding)
+context: Related work
+
+
+feature (1): Min Time To Live:          paper: Detection of Unauthorized IoT using ML  
+            Time To Live field  is the life span of that TCP segment, TCP segment might endup in getting routed in endlessly in a loop, to prevent this middle boxes discard segment when TTL expires.
+    Min TTL was found to be the most import feature/attribute to train the model for white listing IoT devices. importance score recorded was 0.038.    
+context: table - 4
+
+
+feature (5): HTTP Header:                paper: Detection of threats to IoT Devices using VPN based Honeypots
+            HTTP Request methods provided HTTP protocol are used to request/retrieve some data from a host/server, we can get a lot of information by just looking at 
+    HTTP request headers. From the perspective of Request paper Detection of threats to IoT Devices using VPN based Honeypots,
+    Honeypots keep monitoring the malignant requests like request for config files of IoT deivies. Honeypots analyze the request URLs uising a unsupervised learning model HONeypot Novel HTTP Request ANalyzer (HONAN)
+context: Live Detection of Novel HTTP Requests

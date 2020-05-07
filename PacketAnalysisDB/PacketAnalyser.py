@@ -3,13 +3,14 @@ from scapy.layers.http import HTTP
 from scapy.layers.inet import IP, TCP
 from scapy.layers.l2 import ARP
 
+
 class PacketAnalyser():
-    def __init__(self,intervals =100):
+    def __init__(self, intervals=100):
         self.intervals = intervals
         self.packets = rdpcap("src/test.pcap")
         self.numPackets = len(self.packets)
-    
-    def getHTTPHeader(self,packets):
+
+    def getHTTPHeader(self, packets):
         """
             returns a list of  HTTP Headers of any possible sessions involved in the 
             packets provided
@@ -17,28 +18,29 @@ class PacketAnalyser():
         headers = []
         for packet in packets:
             if not packet.haslayer('HTTPRequest'):
-                headers.append(float('nan'))
+                # headers.append(float('nan'))
                 continue
-            http_layer= packet.getlayer('HTTPRequest').fields 
+            http_layer = packet.getlayer('HTTPRequest').fields
             headers.append(http_layer)
         return headers
-    
-    def getIPaddr(self,packets):
+
+    def getIPaddr(self, packets):
         """
-            returns a list of IP addresses involved in the 
+            returns a list of IP and ports addresses involved in the 
             packets provided
         """
         allIPs = set()
         for pkt in packets:
-            if pkt.haslayer('IP'):
+            if TCP in pkt and pkt.haslayer('IP'):
                 # print(pkt.getlayer('ARP').hwsrc)
                 srcIP = pkt.getlayer('IP').src
-                dstIP = pkt.getlayer('IP').dest
-                allIPs.add(srcIP)
-                allIPs.add(dstIP)
-            
+                dstIP = pkt.getlayer('IP').dst
+
+                allIPs.add((srcIP, pkt[TCP].sport))
+                allIPs.add((dstIP, pkt[TCP].dport))
+
         return allIPs
-    
+
     def getSession(self, packets):
         sessions = []
         for session in packets.sessions():
@@ -46,26 +48,25 @@ class PacketAnalyser():
 
         return session
 
-    def getTTL(self, packets):
+    def getMinTTL(self, packets):
         allTTL = []
         for packet in packets:
             if IP in packet:
                 allTTL.append(packet[IP].ttl)
-            else:
-                allTTL.append(float('nan'))
-        
+            # else:
+            #     allTTL.append(float('nan'))
+
         return allTTL
-    
-    def getMac(self, packets) :
+
+    def getMac(self, packets):
         """
             traverses through all packets provided and
             returns a set of tuples (IP, MAC)
         """
         allMac = set()
         for packet in packets:
-            if IP in packet:
-                allMac.add((packet[IP].src,packet[ARP].hwsrc))
-                allMac.add((packet[IP].dst,packet[ARP].hwdst))
-        
+            if IP in packet and ARP in packet:
+                allMac.add((packet[IP].src, packet[ARP].hwsrc))
+                allMac.add((packet[IP].dst, packet[ARP].hwdst))
+
         return allMac
-    
