@@ -1,4 +1,4 @@
-#READING ASSIGNMENT AND PACKET ANALYSIS
+# READING ASSIGNMENT AND PACKET ANALYSIS
 Requirements:
 Please install Scapy
 pip3 install scapy
